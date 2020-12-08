@@ -58,6 +58,7 @@ class TrackerSiamFC(Tracker):
         if net_path is not None:
             self.net.load_state_dict(torch.load(
                 net_path, map_location=lambda storage, loc: storage))
+            print('Checkpoint loaded!')
         self.net = self.net.to(self.device)
 
         # setup criterion
