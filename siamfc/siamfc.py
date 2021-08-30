@@ -112,6 +112,8 @@ class TrackerSiamFC(Tracker):
     
     @torch.no_grad()
     def init(self, img, box):
+        img = np.array(img)
+        
         # set to evaluation mode
         self.net.eval()
 
@@ -154,6 +156,8 @@ class TrackerSiamFC(Tracker):
     
     @torch.no_grad()
     def update(self, img):
+        img = np.array(img)
+        
         # set to evaluation mode
         self.net.eval()
 
