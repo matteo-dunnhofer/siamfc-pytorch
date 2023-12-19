@@ -241,7 +241,7 @@ class TrackerSiamFC(Tracker):
                 self.init(img, box)
             else:
                 if self.return_conf:
-                    box, conf = self.update(image)
+                    box, conf = self.update(img)
                     boxes[f, :] = box
                     confidences[f] = conf
                 else:
