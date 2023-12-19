@@ -40,9 +40,10 @@ class Net(nn.Module):
 
 class TrackerSiamFC(Tracker):
 
-    def __init__(self, net_path='siamfc_pytorch/pretrained/siamfc_alexnet_e50.pth', **kwargs):
+    def __init__(self, net_path='siamfc_pytorch/pretrained/siamfc_alexnet_e50.pth', return_conf=True, **kwargs):
         super(TrackerSiamFC, self).__init__('SiamFC', True)
         self.cfg = self.parse_args(**kwargs)
+        self.return_conf = return_conf
 
         # setup GPU device if available
         self.cuda = torch.cuda.is_available()
@@ -193,6 +194,7 @@ class TrackerSiamFC(Tracker):
         response = (1 - self.cfg.window_influence) * response + \
             self.cfg.window_influence * self.hann_window
         loc = np.unravel_index(response.argmax(), response.shape)
+        conf = (response.max() + 1) / 2.
 
         # locate target center
         disp_in_response = np.array(loc) - (self.upscale_sz - 1) / 2
@@ -214,8 +216,11 @@ class TrackerSiamFC(Tracker):
             self.center[1] + 1 - (self.target_sz[1] - 1) / 2,
             self.center[0] + 1 - (self.target_sz[0] - 1) / 2,
             self.target_sz[1], self.target_sz[0]])
-
-        return box
+        
+        if not self.return_conf:
+            return box
+        else:
+            return box, conf
     
     def track(self, img_files, box, visualize=False):
         frame_num = len(img_files)
