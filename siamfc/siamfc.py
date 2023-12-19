@@ -40,7 +40,7 @@ class Net(nn.Module):
 
 class TrackerSiamFC(Tracker):
 
-    def __init__(self, net_path='siamfc_pytorch/pretrained/siamfc_alexnet_e50.pth', return_conf=True, **kwargs):
+    def __init__(self, net_path='siamfc_pytorch/pretrained/siamfc_alexnet_e50.pth', return_conf=False, **kwargs):
         super(TrackerSiamFC, self).__init__('SiamFC', True)
         self.cfg = self.parse_args(**kwargs)
         self.return_conf = return_conf
