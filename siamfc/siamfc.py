@@ -12,8 +12,8 @@ import os
 from collections import namedtuple
 from torch.optim.lr_scheduler import ExponentialLR
 from torch.utils.data import DataLoader
-#from got10k.trackers import Tracker
-from toolkit.trackers import Tracker
+from got10k.trackers import Tracker
+#from toolkit.trackers import Tracker
 
 from . import ops
 from .backbones import AlexNetV1
@@ -227,6 +227,10 @@ class TrackerSiamFC(Tracker):
         frame_num = len(img_files)
         boxes = np.zeros((frame_num, 4))
         boxes[0] = box
+        if self.return_conf:
+            confidences = np.zeros(frame_num)
+            confidences[0] = 1.0
+            
         times = np.zeros(frame_num)
 
         for f, img_file in enumerate(img_files):
@@ -236,13 +240,21 @@ class TrackerSiamFC(Tracker):
             if f == 0:
                 self.init(img, box)
             else:
-                boxes[f, :] = self.update(img)
+                if self.return_conf:
+                    box, conf = self.update(image)
+                    boxes[f, :] = box
+                    confidences[f] = conf
+                else:
+                    boxes[f, :] = self.update(img)
             times[f] = time.time() - begin
 
             if visualize:
                 ops.show_image(img, boxes[f, :])
 
-        return boxes, times
+        if self.return_conf:
+            return boxes, confidences, times
+        else:
+            return boxes, times
     
     def train_step(self, batch, backward=True):
         # set network mode
