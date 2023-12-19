@@ -12,7 +12,8 @@ import os
 from collections import namedtuple
 from torch.optim.lr_scheduler import ExponentialLR
 from torch.utils.data import DataLoader
-from got10k.trackers import Tracker
+#from got10k.trackers import Tracker
+from toolkit.trackers import Tracker
 
 from . import ops
 from .backbones import AlexNetV1
