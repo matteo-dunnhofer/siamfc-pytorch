@@ -194,7 +194,7 @@ class TrackerSiamFC(Tracker):
         response = (1 - self.cfg.window_influence) * response + \
             self.cfg.window_influence * self.hann_window
         loc = np.unravel_index(response.argmax(), response.shape)
-        conf = (response.max() + 1) / 2.
+        conf = response.max() #(response.max() + 1) / 2.
 
         # locate target center
         disp_in_response = np.array(loc) - (self.upscale_sz - 1) / 2
